@@ -57,15 +57,17 @@ public class Main {
             }
         }
     }
+
     public static void greetings() {
         var hour = LocalDateTime.now().getHour();
 
-        if(hour < 12) out.print("Good morning, ");
+        if (hour < 12) out.print("Good morning, ");
         if (hour >= 12 && hour < 18) out.print("Good afternoon, ");
         if (hour >= 18) out.print("Good evening, ");
 
         out.println(System.getProperty("user.name") + "!");
     }
+
     public static void info() {
         out.println("\n======== INFORMATION ========\n");
 
