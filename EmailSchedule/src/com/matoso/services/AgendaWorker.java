@@ -9,29 +9,30 @@ import java.util.Scanner;
 import static java.lang.System.out;
 
 public class AgendaWorker {
-    public static void add() {
-        out.println("\n======== NOVO REGISTO ========\n");
+    public static final SpeechService speech = new SpeechService();
 
-        var console = new Scanner(System.in);
+    public static void add() {
+        out.println("\n======== NEW SCHEDULE ========\n");
 
         var agenda = new Agenda();
+        var console = new Scanner(System.in);
 
-        out.print("Insira o seu nome: ");
+        out.print("Insert your name: ");
         agenda.setName(console.nextLine());
 
-        out.print("Insira o seu email: ");
+        out.print("Insert your email: ");
         agenda.setEmail(console.nextLine());
 
-        out.print("Insira a hora (hh mm): ");
+        out.print("Insert the time (hh mm): ");
         var stringHour = console.nextLine();
 
-        out.print("Insira o dia (dd): ");
+        out.print("Insert the day (dd): ");
         var day = console.nextInt();
 
-        out.print("Insira o mês (mm): ");
+        out.print("Insert the month (mm): ");
         var month = console.nextInt();
 
-        out.print("Insira o ano (yyyy): ");
+        out.print("Insert the year (yyyy): ");
         var year = console.nextInt();
 
         var hour = stringHour.split(" ");
@@ -40,15 +41,16 @@ public class AgendaWorker {
                 LocalDateTime.of(year, month, day, Integer.parseInt(hour[0]), Integer.parseInt(hour[1])) :
                 LocalDateTime.of(year, month, day, Integer.parseInt(hour[0]), 0));
 
+        out.println();
         DataContext.DB.add(agenda);
     }
 
     public static void remove() {
-        out.println("\n======== REMOVER REGISTO ========\n");
+        out.println("\n======== REMOVE SCHEDULE ========\n");
 
         var console = new Scanner(System.in);
 
-        out.print("Insira o email: ");
+        out.print("Insert the email: ");
         var agenda = DataContext.DB.get(console.nextLine());
 
         if(agenda != null) {
@@ -56,15 +58,16 @@ public class AgendaWorker {
             return;
         }
 
-        out.println("Registo não encontrado.");
+        out.println("Register not found.");
+        speech.speak("Register not found.");
     }
 
     public static void setAsImportant() {
-        out.println("\n======== PRIORIZAR ========\n");
+        out.println("\n======== SET AS PRIORITY ========\n");
 
         var console = new Scanner(System.in);
 
-        out.print("Insira o email: ");
+        out.print("Insert the email: : ");
         var agenda = DataContext.DB.get(console.nextLine());
 
         if(agenda != null) {
@@ -74,38 +77,40 @@ public class AgendaWorker {
             return;
         }
 
-        out.println("Registo não encontrado.");
+        out.println("Register not found.");
+        speech.speak("Register not found.");
     }
 
     public static void list() {
-        out.println("\n======== CONSULTAR ========\n");
+        out.println("\n======== CHECK OUT ========\n");
 
         var console = new Scanner(System.in);
 
-        out.println("[1] - Consultar Um");
-        out.println("[2] - Consultar Todos");
+        out.println("[1] - Check One");
+        out.println("[2] - Check All");
         out.print("> ");
 
         int option = console.nextInt();
 
         if(option == 1) {
-            out.print("Insira o email: ");
+            out.print("Insert the email: ");
             console.nextLine();
             var agenda = DataContext.DB.get(console.nextLine());
 
             if(agenda != null) {
                 out.println();
                 out.printf("ID: %d%n", agenda.getId());
-                out.printf("Nome: %s%n", agenda.getName());
+                out.printf("Name: %s%n", agenda.getName());
                 out.printf("Email: %s%n", agenda.getEmail());
-                out.printf("Priorizado: %s%n", agenda.isImportant() ? "Sim" : "Não");
+                out.printf("Priority: %s%n", agenda.isImportant() ? "Yes" : "Not");
                 out.printf("Date: %s %s, %s às %s:%s%n",
                         agenda.getDate().getMonth().name(), agenda.getDate().getDayOfMonth(), agenda.getDate().getYear(),
                         agenda.getDate().getHour(), agenda.getDate().getMinute());
                 return;
             }
 
-            out.println("Registo não encontrado.");
+            out.println("Register not found.");
+            speech.speak("Register not found.");
             return;
         }
 
@@ -113,9 +118,9 @@ public class AgendaWorker {
             out.println();
             for (var agenda : DataContext.DB.all()) {
                 out.printf("ID: %d%n", agenda.getId());
-                out.printf("Nome: %s%n", agenda.getName());
+                out.printf("Name: %s%n", agenda.getName());
                 out.printf("Email: %s%n", agenda.getEmail());
-                out.printf("Priorizado: %s%n", agenda.isImportant() ? "Sim" : "Não");
+                out.printf("Priority: %s%n", agenda.isImportant() ? "Yes" : "Not");
                 out.printf("Date: %s %d, %d às %d:%d%n",
                         agenda.getDate().getMonth().name(), agenda.getDate().getDayOfMonth(), agenda.getDate().getYear(),
                         agenda.getDate().getHour(), agenda.getDate().getMinute());

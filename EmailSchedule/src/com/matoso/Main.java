@@ -14,6 +14,7 @@ package com.matoso;
 import com.matoso.data.Seed;
 import com.matoso.data.DataContext;
 import com.matoso.services.AgendaWorker;
+import com.matoso.services.SpeechService;
 
 import java.util.Scanner;
 
@@ -32,15 +33,15 @@ public class Main {
         while (true) {
             out.println("\n======== MENU ========\n");
 
-            out.println("[1] - Novo Registo");
+            out.println("[1] - New Schedule");
 
             if(!DataContext.DB.all().isEmpty()) {
-                out.println("[2] - Consultar");
-                out.println("[3] - Remover");
-                out.println("[4] - Priorizar");
+                out.println("[2] - Check");
+                out.println("[3] - Remove");
+                out.println("[4] - Set As Priority");
             }
 
-            out.println("[0] - Sair");
+            out.println("[0] - Exit");
             out.print("> ");
 
             int option = console.nextInt();
@@ -51,10 +52,14 @@ public class Main {
                 case 3 -> AgendaWorker.remove();
                 case 4 -> AgendaWorker.setAsImportant();
                 case 0 -> {
-                    out.println("\nObrigado!");
+                    out.println("\nThank You!");
+                    AgendaWorker.speech.speak("Thank you!");
                     exit(200);
                 }
-                default -> out.println("Opção inválida!");
+                default -> {
+                    out.println("Option not allowed!");
+                    AgendaWorker.speech.speak("Option not allowed!");
+                }
             }
         }
     }

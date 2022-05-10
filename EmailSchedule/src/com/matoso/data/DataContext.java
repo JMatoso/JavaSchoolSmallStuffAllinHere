@@ -1,6 +1,7 @@
 package com.matoso.data;
 
 import com.matoso.entites.Agenda;
+import com.matoso.services.AgendaWorker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,17 +28,22 @@ public class DataContext {
                 if(agenda.getDate().isAfter(LocalDateTime.now()) || agenda.getDate().isEqual(LocalDateTime.now())) {
                     _agenda.add(agenda);
 
-                    out.println("Agendado com sucesso!");
+                    out.println("The schedule has been scheduled.");
+                    AgendaWorker.speech.speak("The schedule has been scheduled.");
                     return;
                 }
 
-                out.println("Data inválida!");
+                out.println("Date invalid.");
+                AgendaWorker.speech.speak("Date invalid.");
                 return;
             }
 
-            out.printf("Já há um registro para %s %s, %s às %s:%s%n",
+            var date = String.format("Already has a schedule at %s %s, %s às %s:%s%n",
                     agenda.getDate().getMonth().name(), agenda.getDate().getDayOfMonth(), agenda.getDate().getYear(),
                     agenda.getDate().getHour(), agenda.getDate().getMinute());
+
+            out.printf(date);
+            AgendaWorker.speech.speak(date);
         }
 
         public static @Nullable Agenda get(String email) {
@@ -54,14 +60,17 @@ public class DataContext {
 
         public static void remove(Agenda agenda) {
             _agenda.remove(agenda);
-            out.println("Registo removido com sucesso!");
+
+            out.println("Schedule has been removed.");
+            AgendaWorker.speech.speak("Schedule has been removed.");
         }
 
         public  static void update(Agenda agenda) {
             remove(agenda);
             add(agenda);
 
-            out.println("Registo atualizado com sucesso!");
+            out.println("Schedule has been updated.");
+            AgendaWorker.speech.speak("Schedule has been updated.");
         }
     }
 }
